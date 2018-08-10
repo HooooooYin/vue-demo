@@ -15,7 +15,7 @@
         active-text-color="#000000">
         <!-- 循环写路由 -->
         <template
-          v-for="route in $router.options.routes"
+          v-for="route in $router.options.routes[0].children"
           v-if="!route.hidden"
           >
 
@@ -43,17 +43,17 @@
     </el-col>
     <!-- 用户信息 -->
     <el-col :span="4" class="user" >
-      <el-button-group v-if="!logined" >
+      <el-button-group v-if="!user" >
         <el-button class="button" @click.native="tologin" type="success" size="small" round >Login</el-button>
         <el-button class="button" @click.native="toregister" type="danger" size="small" round >Register</el-button>
       </el-button-group>
       <div v-else>
         <el-dropdown>
-          <img src="../../static/image/avatar.jpg" alt="" class="avatar">
+          <img :src="user.avatar" alt="" class="avatar">
           <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item>李小小</el-dropdown-item>
-            <el-dropdown-item>我的工作台</el-dropdown-item>
-            <el-dropdown-item divided>退出登录</el-dropdown-item>
+            <el-dropdown-item @click.native="tomy" v-text="user.name"></el-dropdown-item>
+            <el-dropdown-item @click.native="tosend">我的工作台</el-dropdown-item>
+            <el-dropdown-item divided @click.native="Logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -64,14 +64,21 @@
 <script>
 export default {
   name: 'Header',
-  data () {
-    return {
-      logined: false
+  computed: {
+    user () {
+      return this.$store.state.user
     }
   },
   methods: {
-    handleSelect () {
-      console.log('菜单选择之后的回调')
+    handleSelect (key) {
+      if (!this.logined && (key === '/manager/my' || key === '/manager/send' || key === '/manager/history')) {
+        this.$notify({
+          title: '很抱歉',
+          message: '请你先登录再访问该页面',
+          type: 'warning',
+          offset: '200'
+        })
+      }
     },
     tohome () {
       this.$router.push('/')
@@ -82,6 +89,11 @@ export default {
     },
     toregister () {
       this.$router.push('/register')
+    },
+    Logout () {
+      sessionStorage.removeItem('user')
+      this.$store.dispatch('logout')
+      this.$router.push('/login')
     }
   }
 }

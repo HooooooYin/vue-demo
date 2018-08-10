@@ -192,6 +192,8 @@ export default {
 
             sessionStorage.setItem('user', JSON.stringify(user))
 
+            this.$store.dispatch('login')
+
             this.$router.push('/manager/my')
           })
         } else {

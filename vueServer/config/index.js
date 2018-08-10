@@ -10,7 +10,8 @@ var db = {
       dialect: 'mysql', 
       timestamps: true,
       underscored: false,
-      paranoid: true
+      paranoid: true,
+      charset: 'utf8'
     }
   }
 };

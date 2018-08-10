@@ -1,29 +1,13 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header>
-        <Myheader></Myheader>
-      </el-header>
-      <el-main>
-        <router-view/>
-      </el-main>
-      <el-footer>
-        <MyFooter></MyFooter>
-      </el-footer>
-    </el-container>
+    <img src="./assets/logo.png">
+    <router-view/>
   </div>
 </template>
 
 <script>
-import Myheader from '@/components/header'
-import MyFooter from '@/components/footer'
-
 export default {
-  name: 'App',
-  components: {
-    Myheader,
-    MyFooter
-  }
+  name: 'App'
 }
 </script>
 

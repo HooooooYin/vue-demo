@@ -6,13 +6,13 @@
       :rules="rule"
       label-width="0"
       class="login-form" >
-      <h3>用户登录系统</h3>
+      <h3>管理员登录</h3>
 
-      <el-form-item prop="username" >
+      <el-form-item prop="adminName" >
         <el-input
           type="text"
-          v-model="LoginForm.username"
-          placeholder="username">
+          v-model="LoginForm.adminName"
+          placeholder="adminName">
         </el-input>
       </el-form-item>
 
@@ -39,8 +39,6 @@
             @click.native.prevent="reset" >
             重置
           </el-button>
-          <hr>
-          <p>还没有账号，马上去<span class="to" @click="toregister" >注册</span></p>
         </el-form-item>
       </el-form-item>
     </el-form>
@@ -48,18 +46,18 @@
 </template>
 
 <script>
-import { LoginUser } from '../api/api'
+import { AdminLogin } from '../api/api'
 
 export default {
   data () {
     return {
       LoginForm: {
-        username: '',
+        adminName: '',
         password: ''
       },
       Logining: false,
       rule: {
-        username: [
+        adminName: [
           {
             required: true,
             max: 14,
@@ -84,14 +82,14 @@ export default {
         if (valid) {
           this.Logining = true
           let loginParams = {
-            userName: this.LoginForm.username,
+            adminName: this.LoginForm.adminName,
             password: this.LoginForm.password
           }
 
-          LoginUser(loginParams).then(res => {
+          AdminLogin(loginParams).then(res => {
             this.Logining = false
 
-            let { code, msg, user } = res.data
+            let { code, msg, admin } = res.data
             if (code !== 200) {
               this.$message({
                 type: 'error',
@@ -103,11 +101,11 @@ export default {
                 message: msg
               })
             }
-            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('admin', JSON.stringify(admin))
 
-            this.$store.dispatch('login')
+            this.$store.dispatch('adminLogin')
 
-            this.$router.push('/manager/my')
+            this.$router.push('/admin')
           })
         } else {
           console.log('submit err')
@@ -116,9 +114,6 @@ export default {
     },
     reset () {
       this.$refs.LoginForm.resetFields()
-    },
-    toregister () {
-      this.$router.push('/register')
     }
   }
 }
@@ -135,8 +130,5 @@ export default {
   .submitBtn
     width 65%
     &
-      margin-top 20px
-  .to
-    color #67c23a
-    cursor pointer
+      margin 20px 0
 </style>

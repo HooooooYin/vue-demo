@@ -1,14 +1,14 @@
 'use strict'
 
 module.exports = function(sequelize, DataTypes){
-  var User = sequelize.define('User', {
-    uid: {
+  var Admin = sequelize.define('Admin', {
+    aid: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
       defaultValue: DataTypes.UUIDV1
     },
-    userName: {
+    adminName: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -20,17 +20,6 @@ module.exports = function(sequelize, DataTypes){
       type: DataTypes.STRING,
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: true
-      }
-    },
-    tel: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     avatar: {
       type: DataTypes.STRING,
       allowNull: true
@@ -38,5 +27,5 @@ module.exports = function(sequelize, DataTypes){
   },{
       freezeTableName: true
   });
-  return User;
+  return Admin;
 }
