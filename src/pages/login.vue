@@ -1,142 +1,99 @@
 <template>
-  <el-main>
-    <el-form
-      :model="LoginForm"
-      ref="LoginForm"
-      :rules="rule"
-      label-width="0"
-      class="login-form" >
-      <h3>用户登录系统</h3>
-
-      <el-form-item prop="username" >
-        <el-input
-          type="text"
-          v-model="LoginForm.username"
-          placeholder="username">
-        </el-input>
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <el-input
-          type="password"
-          v-model="LoginForm.password"
-          placeholder="password" >
-        </el-input>
-
-        <el-form-item class="btn-group">
-          <el-button
-            type="primary"
-            class="submitBtn"
-            round
-            @click.native.prevent="submit"
-            :loading="Logining" >
-            登录
-          </el-button>
-          <el-button
-            type="danger"
-            class="resetBtn"
-            round
-            @click.native.prevent="reset" >
-            重置
-          </el-button>
-          <hr>
-          <p>还没有账号，马上去<span class="to" @click="toregister" >注册</span></p>
-        </el-form-item>
-      </el-form-item>
-    </el-form>
-  </el-main>
+  <div class="login">
+    <h2>登录</h2>
+    <div>
+      <p class="login-item">
+        <label for="username">用户名：</label>
+        <input type="text" name="username" v-model="username" placeholder="请输入用户名" @blur="validaUsername">
+        <span v-if="usernameError" class="user-error">用户名有误</span>
+      </p>
+      <p class="login-item">
+        <label for="password">密码：</label>
+        <input type="password" name="password" ref="password" placeholder="请输入密码">
+      </p>
+      <button class="login-btn">登录</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { LoginUser } from '../api/api'
-
 export default {
   data () {
     return {
-      LoginForm: {
-        username: '',
-        password: ''
-      },
-      Logining: false,
-      rule: {
-        username: [
-          {
-            required: true,
-            max: 14,
-            min: 7,
-            message: '用户名是必须的，长度为7-14位',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          {
-            required: true,
-            message: '密码是必须的',
-            trigger: 'blur'
-          }
-        ]
-      }
+      usernameError: false,
+      username: ''
     }
   },
   methods: {
-    submit () {
-      this.$refs.LoginForm.validate(valid => {
-        if (valid) {
-          this.Logining = true
-          let loginParams = {
-            userName: this.LoginForm.username,
-            password: this.LoginForm.password
-          }
-
-          LoginUser(loginParams).then(res => {
-            this.Logining = false
-
-            let { code, msg, user } = res.data
-            if (code !== 200) {
-              this.$message({
-                type: 'error',
-                message: msg
-              })
-            } else {
-              this.$message({
-                type: 'success',
-                message: msg
-              })
-            }
-            sessionStorage.setItem('user', JSON.stringify(user))
-
-            this.$store.dispatch('login')
-
-            this.$router.push('/manager/my')
-          })
-        } else {
-          console.log('submit err')
-        }
-      })
-    },
-    reset () {
-      this.$refs.LoginForm.resetFields()
-    },
-    toregister () {
-      this.$router.push('/register')
+    validaUsername: function () {
+      let userRegx = /^[\u4e00-\u9fa5a-zA-Z0-9]{0,15}$/
+      if (userRegx.test(this.username)) {
+        this.usernameError = false
+      } else {
+        this.usernameError = true
+      }
     }
   }
 }
 </script>
 
-<style scoped lang="stylus">
-  .login-form
-    margin 20px auto
-    width 310px
-    background #ffffff
-    box-shadow 0 0 35px #b4bccc
-    padding 30px 30px 0 30px
-    border-radius 25px
-  .submitBtn
-    width 65%
-    &
-      margin-top 20px
-  .to
-    color #67c23a
-    cursor pointer
+<style lang="scss" scoped>
+  @import '../style/common';
+  .login {
+    background-color: #ffffff;
+    width: 80%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 1rem $header_color;
+    padding: 1rem;
+    color: $font_color;
+    h2 {
+      font-size: 1.5rem;
+      font-weight: normal;
+      border-bottom: 1px solid #dcdcdc;
+      text-align: left;
+      padding-bottom: 0.5rem;
+      margin: 0;
+      margin-bottom: 2rem;
+    }
+    .login-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      line-height: 2.3rem;
+      position: relative;
+      &:first-child {
+        margin-bottom: 2rem;
+      }
+      .user-error {
+        position: absolute;
+        bottom: -2rem;
+        left: 6.2rem;
+        font-size: 0.8rem;
+        color: red;
+      }
+      label {
+        width: 5rem;
+      }
+      input {
+        border: 1px #dcdcdc solid;
+        height: 2.3rem;
+        padding: 0.3rem;
+        box-sizing: border-box;
+      }
+    }
+    .login-btn {
+      width: 60%;
+      height: 2rem;
+      border-radius: 0.2rem;
+      color: #ffffff;
+      background-color: $panel_color;
+      border: none;
+      font-size: 1.2rem;
+    }
+  }
 </style>
