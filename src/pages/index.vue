@@ -134,12 +134,12 @@ export default {
   data () {
     return {
       item: [
-        '../../static/image/slider1.jpg',
-        '../../static/image/slider2.jpg',
-        '../../static/image/slider3.jpg',
-        '../../static/image/slider4.jpg',
-        '../../static/image/slider5.jpg',
-        '../../static/image/slider6.jpg'
+        '../static/image/slider1.jpg',
+        '../static/image/slider2.jpg',
+        '../static/image/slider3.jpg',
+        '../static/image/slider4.jpg',
+        '../static/image/slider5.jpg',
+        '../static/image/slider6.jpg'
       ],
       notices: [
         '本店外卖饭盒价格统一为1元。',
